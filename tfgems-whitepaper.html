@@ -1,0 +1,303 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFGems: Capture Your Essence</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #000000;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007BFF;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p, ul, li {
+            margin-bottom: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background-color: #f8f8f8;
+        }
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e0e0e0;
+            color: #000000;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        @media print {
+            body {
+                padding: 10px;
+            }
+            table {
+                background-color: #ffffff;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                font-size: 14px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            table {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>TFGems: Capture Your Essence</h1>
+    
+    <p><strong>Date</strong>: May 16, 2025<br>
+    <strong>Project</strong>: TFGems<br>
+    <strong>Mission</strong>: TFGems transforms names, words, or phrases into 10,000 animated NFTs on Solana, blending luxurious art, rarity, and MPL-404’s gamified liquidity to dazzle Web3.</p>
+
+    <h2>Vision</h2>
+    <p>TFGems is a dazzling leap in NFT artistry. Our proprietary script turns names, words, or phrases into hex-coded Pantone colors, crafting animated gems that radiate emotion and exclusivity. Built on Solana’s fast, low-cost blockchain, our 10,000 NFTs mix rare traits (carat size, sparkles, solid backgrounds) with MPL-404’s hybrid magic, letting you trade or re-mint for gems so bold, you’ll curse in awe: “These f*cking gems!”</p>
+
+    <h2>NFT Collection</h2>
+    <ul>
+        <li><strong>Total Supply</strong>: 10,000 NFTs.</li>
+        <li><strong>Blockchain</strong>: Solana.</li>
+        <li><strong>Standard</strong>: MPL-404 (NFTs with fungible $TFGEMS tokens for swaps/re-minting).</li>
+        <li><strong>Traits</strong>:
+            <ul>
+                <li><strong>Carat Size</strong>: 1–10 (0.25 increments, 4 tiers: Common [1–4.75], Uncommon [5–6.75], Rare [7–8.75], Epic [9–10]).</li>
+                <li><strong>Facet Color</strong>: Hex-coded Pantone names (e.g., “Serenity Blue”), some rare (<5%).</li>
+                <li><strong>Sparkle Color</strong>: White (95%), non-white (e.g., gold, rainbow, 5%).</li>
+                <li><strong>Background</strong>: Solid colors (e.g., black, crimson), some rare (<10%).</li>
+                <li><strong>Essence</strong>: Names, words, or phrases fuel vibrant colors.</li>
+            </ul>
+        </li>
+        <li><strong>Storage</strong>: Metadata on IPFS via Pinata.</li>
+    </ul>
+    <p><strong>Example Gem</strong>:<br>
+    - Name: TFGem #0001<br>
+    - Carat: 10 (Epic)<br>
+    - Facet Color: #FFD700 (“Serenity Blue”)<br>
+    - Sparkle: Rainbow<br>
+    - Background: Black<br>
+    - Essence: “Serenity”</p>
+
+    <h2>Why TFGems?</h2>
+    <ul>
+        <li><strong>Luxurious Art</strong>: Names, words, or phrases shine in gems that fuse emotion and high-end flair, unmatched in Web3.</li>
+        <li><strong>Rarity Reigns</strong>: Only 5% are Epic (9–10 carat), with rare sparkles and colors driving collector frenzy.</li>
+        <li><strong>Gamified Wealth</strong>: MPL-404’s $TFGEMS tokens and re-minting fuel Magic Eden trades.</li>
+        <li><strong>Community Swagger</strong>: Telegram (<a href="https://t.me/TFGems">t.me/TFGems</a>) unites 3,000+ fans with AMAs, giveaways, and whitelist perks.</li>
+        <li><strong>Elite Team</strong>: Multimedia pros deliver stunning animations via a sleek Solana contract.</li>
+    </ul>
+
+    <h2>Minting Opportunities</h2>
+    <ol>
+        <li><strong>Eternal Essence Offering (500 Epic Gems)</strong>:
+            <ul>
+                <li><strong>Price</strong>: 2 SOL/gem (~$300), 500 collectors (or 100 buy 5 at 10 SOL).</li>
+                <li><strong>Details</strong>: Pre-minted, guaranteed 9–10 carat gems with your name/word/phrase (e.g., “Serenity”), rare sparkles/colors.</li>
+                <li><strong>How</strong>: Pay 2 SOL via dApp (<a href="https://eternal.tfgems.io">eternal.tfgems.io</a>), submit phrase, claim your gem.</li>
+                <li><strong>Launch</strong>: June 7, 2025.</li>
+            </ul>
+        </li>
+        <li><strong>NFT Tickets (500 Rare Gems)</strong>:
+            <ul>
+                <li><strong>Price</strong>: 1 SOL/gem (~$150), 500 collectors.</li>
+                <li><strong>Details</strong>: Pre-minted, guaranteed 7–8.75 carat gems, semi-rare traits.</li>
+                <li><strong>How</strong>: Buy ticket via dApp, redeem for gem.</li>
+                <li><strong>Launch</strong>: June 7, 2025.</li>
+            </ul>
+        </li>
+        <li><strong>Whitelist (2,000 Spots)</strong>:
+            <ul>
+                <li><strong>Price</strong>: 0.6 SOL (~$90), random-minted gems (5–8.75 carat, Uncommon/Rare).</li>
+                <li><strong>Criteria</strong>: Telegram engagement (polls, X posts), 50 Epic gem giveaways.</li>
+                <li><strong>Launch</strong>: June 28, 2025.</li>
+            </ul>
+        </li>
+        <li><strong>Public Mint (~7,000 Gems)</strong>:
+            <ul>
+                <li><strong>Price</strong>: 0.6 SOL, random (1–8.75 carat).</li>
+                <li><strong>Launch</strong>: July 5, 2025.</li>
+                <li><strong>Marketplace</strong>: Magic Eden.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h2>Rarity</h2>
+    <table>
+        <tr>
+            <th>Tier</th>
+            <th>Carat Range</th>
+            <th>%</th>
+            <th>NFTs</th>
+            <th>$TFGEMS Value</th>
+        </tr>
+        <tr>
+            <td>Common</td>
+            <td>1–4.75</td>
+            <td>50%</td>
+            <td>5,000</td>
+            <td>50–100 tokens</td>
+        </tr>
+        <tr>
+            <td>Uncommon</td>
+            <td>5–6.75</td>
+            <td>30%</td>
+            <td>3,000</td>
+            <td>150–250 tokens</td>
+        </tr>
+        <tr>
+            <td>Rare</td>
+            <td>7–8.75</td>
+            <td>15%</td>
+            <td>1,500</td>
+            <td>300–400 tokens</td>
+        </tr>
+        <tr>
+            <td>Epic</td>
+            <td>9–10</td>
+            <td>5%</td>
+            <td>500</td>
+            <td>500–1,000 tokens</td>
+        </tr>
+    </table>
+    <ul>
+        <li><strong>Offering</strong>: 500 Epic, pre-minted.</li>
+        <li><strong>Tickets</strong>: 500 Rare, pre-minted.</li>
+        <li><strong>Whitelist/Public</strong>: Random, Uncommon/Rare focus.</li>
+    </ul>
+
+    <h2>Execution Plan</h2>
+    <ol>
+        <li><strong>Pre-Launch (May–June 2025)</strong>:
+            <ul>
+                <li>Grow Telegram (<a href="https://t.me/TFGems">t.me/TFGems</a>, 3,000+ fans) with teasers, polls, AMAs.</li>
+                <li>Drop 30-second video: “Capture Your Essence.”</li>
+                <li>Deploy Solana contract, dApp (<a href="https://eternal.tfgems.io">eternal.tfgems.io</a>), pre-mint 1,000 gems (500 offering, 500 tickets).</li>
+                <li>Hype offering/tickets on Telegram/X, collab with @GroovyNFTs.</li>
+            </ul>
+        </li>
+        <li><strong>Mint (June–July 2025)</strong>:
+            <ul>
+                <li>June 7: Offering/tickets mint, share Solscan logs.</li>
+                <li>June 28: Whitelist mint (2,000 spots).</li>
+                <li>July 5: Public mint (~7,000 gems), list on Magic Eden.</li>
+            </ul>
+        </li>
+        <li><strong>Post-Mint (July–August 2025)</strong>:
+            <ul>
+                <li>Utilities: Telegram VIP channel, Decentraland gallery, $TFGEMS airdrop (50 tokens), TFGems DAO.</li>
+                <li>Earn 6% royalties on secondary sales.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h2>Transparency</h2>
+    <ul>
+        <li><strong>Minting</strong>: Offering/tickets are pre-minted for guaranteed delivery; whitelist/public are random, re-mintable for Epic gems.</li>
+        <li><strong>Trust</strong>: Solscan logs, rarity chart, and Telegram AMAs ensure fairness.</li>
+        <li><strong>Rarity Chart</strong>:
+            <ul>
+                <li>Common (1–4.75): 50%, 5,000 NFTs</li>
+                <li>Uncommon (5–6.75): 30%, 3,000 NFTs</li>
+                <li>Rare (7–8.75): 15%, 1,500 NFTs</li>
+                <li>Epic (9–10): 5%, 500 NFTs</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Why Join TFGems?</h2>
+    <ul>
+        <li><strong>Playful Luxury</strong>: TFGems’ cheeky swagger sparks buzz, making waves in Web3.</li>
+        <li><strong>Elite Value</strong>: 5% Epic gems match 1–3 SOL market floors, primed for Magic Eden.</li>
+        <li><strong>Community Heat</strong>: Telegram’s 3,000+ fans drive hype, like Azuki’s fanbase.</li>
+        <li><strong>Liquid Empire</strong>: MPL-404’s $TFGEMS tokens and re-minting build a thriving ecosystem.</li>
+        <li><strong>Built to Shine</strong>: Funds fuel utilities and future collections.</li>
+    </ul>
+
+    <div class="footer">
+        <strong>Get In</strong>: <a href="https://t.me/TFGems">t.me/TFGems</a> | <a href="https://eternal.tfgems.io">eternal.tfgems.io</a> | #TFGems #Solana
+    </div>
+</body>
+</html>
